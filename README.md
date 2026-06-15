@@ -17,24 +17,25 @@
    不接触 API Key                          从环境变量读 Key
 ```
 
-- 生产环境:`api/lookup.js` 作为 Vercel serverless 函数运行。
+- 生产环境:`functions/api/lookup.js` 作为 Cloudflare Pages Function 运行。
 - 本地开发:`server.js`(Express)提供同样的 `/api/lookup` 路由。
 - 两者共用 `lib/siliconflow.js` 里的查词逻辑,Key 始终来自服务端环境变量 `SILICONFLOW_API_KEY`。
 
 ---
 
-## 部署到 Vercel(推荐)
+## 部署到 Cloudflare Pages(推荐)
 
 详细图文步骤见 **[deploy-instructions.md](deploy-instructions.md)**,概要:
 
 1. 把代码推到你自己的 GitHub 仓库。
-2. 在 [vercel.com](https://vercel.com) 用 GitHub 登录 → Import 这个仓库。
-3. 在项目的 **Settings → Environment Variables** 添加:
+2. 在 [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → Create → Pages → Connect to Git,导入这个仓库。
+3. 构建设置:Build output directory 填 `public`(`wrangler.toml` 已配好,通常自动识别)。
+4. 在 **Environment variables** 添加:
    - Name: `SILICONFLOW_API_KEY`
    - Value: 你的硅基流动 Key(以 `sk-` 开头)
-4. Deploy,得到一个 `https://你的项目.vercel.app` 地址,所有设备打开即可使用。
+5. Deploy,得到一个 `https://你的项目.pages.dev` 地址,所有设备打开即可使用。
 
-> Key 只填在 Vercel 后台,不写进任何代码、不进仓库、不到浏览器。
+> Key 只填在 Cloudflare 后台,不写进任何代码、不进仓库、不到浏览器。
 
 ### 申请 SiliconFlow API Key
 
@@ -73,7 +74,7 @@ node server.js
 ## 常见问题
 
 ### Q:点击单词一直「查询中...」或报错?
-- 确认 Vercel(或本地)已正确设置 `SILICONFLOW_API_KEY`
+- 确认 Cloudflare(或本地)已正确设置 `SILICONFLOW_API_KEY`
 - 检查硅基流动额度是否用完
 
 ### Q:能离线使用吗?
@@ -96,8 +97,9 @@ node server.js
 
 ```
 reader4me/
-├── api/
-│   └── lookup.js             # Vercel serverless 代理(生产)
+├── functions/
+│   └── api/
+│       └── lookup.js         # Cloudflare Pages Function 代理(生产)
 ├── lib/
 │   └── siliconflow.js        # 共享查词逻辑(前后端复用)
 ├── public/
@@ -105,7 +107,7 @@ reader4me/
 │   ├── style.css             # 前端样式
 │   └── app.js                # 前端 JS(不含任何 Key)
 ├── server.js                 # 本地 Express 服务器(同样提供 /api/lookup)
-├── vercel.json               # Vercel 配置(函数区域 hkg1)
+├── wrangler.toml             # Cloudflare Pages 配置(输出目录 public)
 ├── package.json
 ├── README.md
 └── deploy-instructions.md

@@ -1,0 +1,6 @@
+name = "reader4me"
+compatibility_date = "2024-11-01"
+
+# Static assets (the frontend) live in public/. Cloudflare Pages serves these
+# directly and auto-detects the functions/ directory for the API proxy.
+pages_build_output_dir = "public"
