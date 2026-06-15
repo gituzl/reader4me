@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets — NEVER commit your API key
+.env
+.env.*
+
+# Vercel
+.vercel
+
+# OS / editor
+.DS_Store
+Thumbs.db
